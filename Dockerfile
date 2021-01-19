@@ -6,11 +6,11 @@ COPY ./ ./
 
 RUN npm install
 
-# for development uncomment the command below and comment out the "npm run heroku-postbuild" command
-#RUN npm run install:client
+# For production comment out the command below and uncomment the "npm run heroku-postbuild" command
+RUN npm run install:client
 
-#For Production, comment it for devleopment
-RUN npm run heroku-postbuild
+# Uncomment For Production, comment it out for devleopment
+# RUN npm run heroku-postbuild
 
 
 CMD ["/bin/bash"]

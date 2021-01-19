@@ -1,4 +1,4 @@
-# For Development uncomment the npm run dev command below and comment out the npm start command, as well as the NODE_ENV enviroment
+# For Production comment out the npm run dev command below and uncomment the npm start command, as well as the NODE_ENV enviroment
 
 
 services: 
@@ -9,10 +9,10 @@ services:
       - .:/usr/src/face-detector
 
     # For development
-    # command: npm run dev
+    command: npm run dev
 
-    # for Production 
-    command: npm start
+    # For Production 
+    # command: npm start
     working_dir: /usr/src/face-detector
     ports:
       - "3000:3000"
@@ -23,7 +23,7 @@ services:
       POSTGRES_URI: postgres://admin:password@postgres:5432/face-detector
       REDIS_URI: redis://redis:6379
       # Remove NODE_ENV for development
-      NODE_ENV: production
+      # NODE_ENV: production
 
 
   

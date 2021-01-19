@@ -15,7 +15,7 @@ const Profile = ({ user, loadUser, token }) => {
   });
   const [redirct, setRedirect] = useState(false);
 
-  const { name, age, entries, joined } = userInfo;
+  const { name, entries, joined } = userInfo;
 
   const onInputChange = (event) => {
     let value = event.target.value;
@@ -60,11 +60,6 @@ const Profile = ({ user, loadUser, token }) => {
             </h1>
             <p className="b">{`Images submitted: ${entries}`}</p>
             <p>{`Member since: ${new Date(joined).toLocaleDateString()}`}</p>
-            {age ? (
-              <p>{`Age: ${
-                parseInt(age) ? age : "please insert a valid age"
-              }`}</p>
-            ) : null}
             <hr
               style={{
                 backgroundColor: "black",
@@ -84,19 +79,6 @@ const Profile = ({ user, loadUser, token }) => {
               id="user-name"
               className="profile-input pa2 input-reset ba b--black bg-transparent hover-bg-black hover-white w-100 mb3 "
               placeholder="eg: John"
-            ></input>
-            <label className="db fw6 lh-copy f5 ma1" htmlFor="user-age">
-              Edit Age:
-            </label>
-            <input
-              onChange={onInputChange}
-              type="number"
-              name="age"
-              min="10"
-              max="150"
-              id="user-age"
-              className="profile-input pa2 input-reset ba b--black bg-transparent hover-bg-black hover-white w-100"
-              placeholder="eg: 23"
             ></input>
             <div className="mt4">
               <input

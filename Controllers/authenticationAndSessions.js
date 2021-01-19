@@ -5,6 +5,18 @@ const redisClient = redis.createClient(process.env.REDIS_URI);
 //grabbing JWT_SECRET from .env
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
+//Removes the provided token from Redis on signout (Clears session)
+const handleSignOut = (req, res) => {
+  const { authorization } = req.headers;
+  return redisClient.del(authorization, (err, reply) => {
+    if (err || !reply) {
+      res.status(400).json("Error with Redis");
+    } else {
+      res.status(200).json("success Signing Out");
+    }
+  });
+};
+
 //Checks to see if the user entered a valid username and password or not
 const validateEmailAndPassword = (req, db, bcrypt) => {
   const { email, password } = req.body;
@@ -23,17 +35,19 @@ const validateEmailAndPassword = (req, db, bcrypt) => {
             .then((user) => user[0])
             .catch((err) => Promise.reject("unable to get user"));
         } else {
-          Promise.reject("wrong email or password").catch(err => console.log(err));
+          Promise.reject("wrong email or password").catch((err) =>
+            console.log(err)
+          );
         }
       } else {
-        Promise.reject("wrong email or password").catch(err => console.log(err));
+        Promise.reject("wrong email or password").catch((err) =>
+          console.log(err)
+        );
       }
     })
     .catch((err) => {
       console.log(err);
-      Promise.reject(
-        "There is a problem with the database"
-      );
+      Promise.reject("There is a problem with the database");
     });
 };
 
@@ -75,7 +89,6 @@ const storeTokenInRedis = async (token, id) => {
   }
 };
 
-
 //if the req has a jwt checks if it's valid, else checks if username & password are valid and creates a new session.
 const handleSignInAuthentiaction = (req, res, db, bcrypt) => {
   const { authorization } = req.headers;
@@ -90,7 +103,7 @@ const handleSignInAuthentiaction = (req, res, db, bcrypt) => {
                 .then((session) => res.json(session))
                 .catch((err) => res.status(400).json(err));
         })
-        .then((session) => res.status(200).json({ ...session}))
+        .then((session) => res.status(200).json({ ...session }))
         .catch((err) => {
           console.log(err);
           res.status(400).json("error creating user Session");
@@ -99,5 +112,6 @@ const handleSignInAuthentiaction = (req, res, db, bcrypt) => {
 
 module.exports = {
   handleSignInAuthentiaction: handleSignInAuthentiaction,
-  redisClient: redisClient
+  redisClient: redisClient,
+  handleSignOut: handleSignOut,
 };

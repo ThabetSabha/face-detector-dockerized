@@ -9,7 +9,7 @@ const compression = require("compression");
 const enforce = require("express-sslify");
 
 const register = require("./Controllers/register");
-const signin = require("./Controllers/signin");
+const authenticationAndSessions = require("./Controllers/authenticationAndSessions");
 const profile = require("./Controllers/profile");
 const image = require("./Controllers/image");
 const authorization = require("./middleware/authorization");
@@ -32,7 +32,6 @@ app.use(morgan("tiny"));
 
 console.log("startedd");
 
-
 //Register
 app.post("/register", (req, res) => {
   register.handleRegister(req, res, db, bcrypt);
@@ -40,8 +39,12 @@ app.post("/register", (req, res) => {
 
 //sign in
 app.post("/signin", (req, res) => {
-  signin.handleSignInAuthentiaction(req, res, db, bcrypt);
+  authenticationAndSessions.handleSignInAuthentiaction(req, res, db, bcrypt);
 });
+
+app.post("/signout", authorization.requireAuth, (req, res) =>
+  authenticationAndSessions.handleSignOut(req, res)
+);
 
 //Profile
 app.get("/profile/:id", authorization.requireAuth, (req, res) => {
@@ -62,17 +65,15 @@ app.post("/imageurl", (req, res) => {
   image.handleApiCall(req, res);
 });
 
-
 if (process.env.NODE_ENV === "production") {
   app.use(compression());
-  //app.use(enforce.HTTPS({ trustProtoHeader: true }));
+  app.use(enforce.HTTPS({ trustProtoHeader: true }));
   app.use(express.static(path.join(__dirname, "client/build")));
 
   app.get("*", function (req, res) {
     res.sendFile(path.join(__dirname, "client/build", "index.html"));
   });
 }
-
 
 app.listen(port, (error) => {
   if (error) throw error;

@@ -37,7 +37,6 @@ const App = () => {
     email: "",
     joined: "",
     entries: "0",
-    age: 0,
   });
   const [isChecking, setIsChecking] = useState(false);
 
@@ -123,6 +122,10 @@ const App = () => {
     });
     setSignedIn(false);
     setImageUrl("");
+    fetch("signout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: token },
+    });
     sessionStorage.clear(); //to clear seassionStorage when we sign out
   };
 
