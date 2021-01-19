@@ -13,7 +13,7 @@ Live Demo : https://demo-face-detector.herokuapp.com/
        
 To use this project you need to:    
 1- provide your own .env file containing :     
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a- CLARIFAI_KEY (need to create a clarifai account, used to handle face-detection requests to the clarifai api)      
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a- CLARIFAI_KEY (you need to create a clarifai account, used to handle face-detection requests to the clarifai api)      
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b- JWT_SECRET = (to sign the JWT)     
 2- have docker installed     
 3- to run in development cd into the project and run "docker-compose up --build",
