@@ -65,11 +65,12 @@ const getAuthTokenId = (req, res) => {
 
 //Signs the JWT
 const signToken = (payload) => {
-  const jwtPayload = { payload };
-  return jwt.sign(jwtPayload, process.env.JWT_SECRET, { expiresIn: "2 days" });
+  let dateCreated = new Date();
+  const jwtPayload = { payload, dateCreated };
+  return jwt.sign(jwtPayload, process.env.JWT_SECRET, { expiresIn: "10h" });
 };
 
-//Creates a User Session by calling signToken and then storeTokenInRedis
+//Creates a User Session by calling signToken and then storeTokenInRedis (With a 10h expiration date)
 const createSession = async (data) => {
   const token = signToken(data.email);
   try {
@@ -83,6 +84,7 @@ const createSession = async (data) => {
 const storeTokenInRedis = async (token, id) => {
   try {
     let data = await redisClient.set(token, id);
+    redisClient.expire(token, 10*60*60);
     return data;
   } catch (error) {
     console.log(error);

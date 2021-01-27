@@ -87,9 +87,14 @@ const App = () => {
                 setIsChecking(false);
               }
             });
+          } else {
+            setIsChecking(false);
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          setIsChecking(false);
+        });
     }
   }, [token, signedIn]);
 
@@ -131,49 +136,52 @@ const App = () => {
 
   //When user submits the image
   const onButtonSubmit = () => {
-    setImageUrl(input);
-    if (input) {
-      //returns face detection data from clarifai.
-      fetch("imageurl", {
-        method: "post",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          input: input,
-        }),
-      })
-        .then((res) => res.json())
-
-        .then((response) => {
-          const BoundingBoxesArray = response.outputs[0].data.regions.map(
-            (region) => region.region_info.bounding_box
-          );
-          // this gives us an array that has the bounding dimentions
-          const Boxes = BoundingBoxesArray.map((box) =>
-            calculateBoxLocation(box)
-          );
-          // this gives us an array "Boxes" that gets the calculated Pixel Locations by passing each box in the BoundingBoxesArray through the calculateBoxLocation function above.
-          setFaceBoxesLocations(Boxes);
-          // we wanna map through this to display a number of <div> each with a box inside.
+    if(imageUrl !== input){
+      setFaceBoxesLocations([])
+      setImageUrl(input);
+      if (input) {
+        //returns face detection data from clarifai.
+        fetch("imageurl", {
+          method: "post",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            input: input,
+          }),
         })
-        .then((res) => {
-          // we wanna fetch a put method to the server after recieving a response to get and update user entries.
-          if (user.id !== "0") {
-            //we don't want to update entries for guests (They have an id of 0).
-            fetch("image", {
-              method: "put",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                id: user.id,
-              }),
-            })
-              .then((res) => res.json()) // the response is gonna be the number of entries the user has
-              .then((count) => setUser({ ...user, entries: count }));
-          }
-        })
-
-        .catch((err) => {
-          console.log(err, "couldn't fetch image!");
-        });
+          .then((res) => res.json())
+  
+          .then((response) => {
+            const BoundingBoxesArray = response.outputs[0].data.regions.map(
+              (region) => region.region_info.bounding_box
+            );
+            // this gives us an array that has the bounding dimentions
+            const Boxes = BoundingBoxesArray.map((box) =>
+              calculateBoxLocation(box)
+            );
+            // this gives us an array "Boxes" that gets the calculated Pixel Locations by passing each box in the BoundingBoxesArray through the calculateBoxLocation function above.
+            setFaceBoxesLocations(Boxes);
+            // we wanna map through this to display a number of <div> each with a box inside.
+          })
+          .then((res) => {
+            // we wanna fetch a put method to the server after recieving a response to get and update user entries.
+            if (user.id !== "0") {
+              //we don't want to update entries for guests (They have an id of 0).
+              fetch("image", {
+                method: "put",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  id: user.id,
+                }),
+              })
+                .then((res) => res.json()) // the response is gonna be the number of entries the user has
+                .then((count) => setUser({ ...user, entries: count }));
+            }
+          })
+  
+          .catch((err) => {
+            console.log(err, "couldn't fetch image!");
+          });
+      }
     }
   };
 

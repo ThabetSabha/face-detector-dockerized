@@ -3,6 +3,7 @@ const cors = require("cors");
 const knex = require("knex");
 const bcrypt = require("bcryptjs");
 const morgan = require("morgan");
+const helmet = require("helmet");
 
 const path = require("path");
 const compression = require("compression");
@@ -24,11 +25,28 @@ const db = knex({
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(morgan("tiny"));
+
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
+
+const corsOptions =
+  process.env.NODE_ENV === "production"
+    ? {
+        origin: "https://demo-face-detector.herokuapp.com/",
+        optionsSuccessStatus: 200,
+      }
+    : {
+        origin: "*",
+        optionsSuccessStatus: 200,
+      };
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
-
-app.use(morgan("tiny"));
 
 console.log("startedd");
 

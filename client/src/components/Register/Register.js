@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 
 const Register = () => {
@@ -21,23 +21,8 @@ const Register = () => {
     setPassword(event.target.value);
   };
 
-  useEffect(() => {
-    //this works similar to ComponentDidMount
-    const input = document.getElementsByClassName("submitOnEnter"); //returns an array containing input fields.
-    const submitForm = (event) => {
-      if (event.keyCode === 13) {
-        //if enter is pressed inside the input field, click Submit button.
-        event.preventDefault();
-        document.getElementById("submitButton").click();
-      }
-    };
-    // Execute a function when the user releases a key on the keyboard , we can use map or forEach
-    input[0].addEventListener("keyup", submitForm);
-    input[1].addEventListener("keyup", submitForm);
-    input[2].addEventListener("keyup", submitForm);
-  }, []);
-
-  const onSubmit = () => {
+  const onSubmit = (e) => {
+    e.preventDefault();
     if (email && password && name) {
       //to check if the fields aren't empty
       setEmptyFields(false);
@@ -74,7 +59,10 @@ const Register = () => {
           }}
         />
       ) : (
-        <article className="br2 shadow-1 ba dark-gray b--black-10 mv4 w-90 w-50-m w-25-l mw6 center">
+        <form
+          className="br2 shadow-1 ba dark-gray b--black-10 mv4 w-90 w-50-m w-25-l mw6 center"
+          onSubmit={onSubmit}
+        >
           <article className="pa4 black-80">
             <div action="sign-up_submit" method="get" acceptCharset="utf-8">
               <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
@@ -135,14 +123,11 @@ const Register = () => {
                   id="submitButton"
                   type="submit"
                   value="Register"
-                  onClick={() => {
-                    onSubmit();
-                  }}
                 />
               </div>
             </div>
           </article>
-        </article>
+        </form>
       )}
     </div>
   );
