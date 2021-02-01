@@ -65,8 +65,7 @@ const getAuthTokenId = (req, res) => {
 
 //Signs the JWT
 const signToken = (payload) => {
-  let dateCreated = new Date();
-  const jwtPayload = { payload, dateCreated };
+  const jwtPayload = { payload };
   return jwt.sign(jwtPayload, process.env.JWT_SECRET, { expiresIn: "10h" });
 };
 
