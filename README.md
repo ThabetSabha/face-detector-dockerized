@@ -20,4 +20,5 @@ To use this project you need to:
 3- to run in development cd into the project and run "docker-compose up --build",
 this will create the docker containers (app, postgres, redis), and then run the app in dev mode (Server on port 5000, Client on port 3000).     
 *to run in production check the docker-compose as well as the Dockerfile provided in the main folder.     
-*Lambda fucntion have strict access, so you need to create your own to use in development (functions are provided in /src/Lambdas)
+     
+*Lambda functions used have a strict CORS policy, so you need to create your own to use in development (functions are provided in /src/Lambdas)
