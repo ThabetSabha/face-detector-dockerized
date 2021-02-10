@@ -2,9 +2,10 @@
 
 A small full stack web app that uses an api to detect faces in images submitted.
     
-The front-end was built using React, while the backend was built using Express.
-it uses Bcrypt to encrypt passwords, Knex.js for querying the PostgreSQL database, and Redis to handle user sessions. 
-AWS Lambda functions are also used to uplaod and delete user Avatars from an AWS S3 bucket.
+The front-end was built using React, while the backend was built using ExpressJS.    
+It uses Bcrypt to encrypt users’ passwords, Knex.js to query the PostgreSQL database that is used to store user info,    
+Redis to handle user sessions, and two AWS Lambda functions to upload and delete user Avatars from an AWS S3 bucket.     
+The app’s services (Backend, Redis, & Postgres) were also containerized using Docker, along with Docker-Compose to connect them.      
     
 PS. this was one of my first projects, so the code quality isn't that great.
      
